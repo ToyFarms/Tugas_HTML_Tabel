@@ -7,20 +7,6 @@
   color: white;
 }
 
-@media only screen and (max-width: 768px) {
-  .heading-text,
-  .heading-text::after {
-    font-size: 2rem !important;
-  }
-}
-
-@media only screen and (max-width: 468px) {
-  .heading-text,
-  .heading-text::after {
-    font-size: 1rem !important;
-  }
-}
-
 .meter-container {
   display: flex;
   flex-direction: row;
@@ -75,7 +61,7 @@ body {
 }
 
 .heading-text {
-  font-size: 3rem;
+  font-size: 5vw;
   font-weight: bolder;
   position: relative;
   text-wrap: nowrap;
@@ -170,4 +156,9 @@ footer {
 .people-count-btn:hover {
   color: white;
   box-shadow: 0 5px 10px 0 rgb(70, 70, 70);
+}
+
+form {
+  display: flex;
+  gap: 1rem;
 }
