@@ -1,20 +1,14 @@
-// const data = [
-//   "Diandra Shafar Rahman;X TKJ 5;$auto",
-//   "Revi Satriana;X TKJ 5;$auto",
-//   "Cindi;X TKJ 5;$auto",
-//   "Anita;X TKJ 5;$auto",
-//   "Anisa;X TKJ 5;$auto",
-//   "Elsa;X TKJ 5;$auto",
-//   "Mutiara;X TKJ 5;$auto",
-//   "Reysha;X TKJ 5;$auto",
-//   "Alinda;X TKJ 5;$auto",
-//   "Kharysa;X TKJ 5;$auto",
-//   "Nurul;X TKJ 5;$auto",
-//   "Andari;X TKJ 5;$auto",
-// ];
-
 document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const max_people = parseInt(params.get("max_people")) || data.length;
+  let i = 0;
+
+  document.getElementsByClassName("people-count")[0].value = max_people;
+
+  shuffle(data);
   data.forEach((person) => {
+    if (i >= max_people) return;
+
     let [name, _class, address, score] = person.split(";");
     if (score === "$auto") {
       score = randint(0, 100);
@@ -25,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     create_row({ name: name, class: _class, address: address, score: score });
+
+    i++;
   });
 
   const observer = new IntersectionObserver(
@@ -46,6 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const texts = document.getElementsByClassName("text-scramble");
   for (const text of texts) {
     animate_text_scramble(text);
+  }
+
+  const form = document.getElementById("form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const value = document.getElementsByClassName("people-count")[0].value;
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("max_people", value);
+    window.location.search = params;
+  });
+});
+
+document.addEventListener("keypress", (e) => {
+  if (e.key === "/") {
+    e.preventDefault();
+    document.getElementsByClassName("people-count")[0].focus();
   }
 });
 
@@ -155,6 +168,16 @@ const randint = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+function shuffle(array) {
+  let idx = array.length;
+
+  while (idx != 0) {
+    let rand_idx = Math.floor(Math.random() * idx);
+    idx--;
+    [array[idx], array[rand_idx]] = [array[rand_idx], array[idx]];
+  }
+}
+
 const create_row = (rowdef) => {
   const table = document.getElementsByClassName("main-table")[0];
 
@@ -168,9 +191,7 @@ const create_row = (rowdef) => {
 
   cell = row.insertCell();
   cell.appendChild(
-    $s("div", ["table-def"], { textAlign: "center" }, [
-      document.createTextNode(rowdef["class"]),
-    ]),
+    $("div", ["table-def"], [document.createTextNode(rowdef["class"])]),
   );
 
   cell = row.insertCell();
@@ -180,7 +201,7 @@ const create_row = (rowdef) => {
 
   cell = row.insertCell();
   const meter = create_meter();
-  meter.dataset.percent = rowdef["score"]
+  meter.dataset.percent = rowdef["score"];
   cell.appendChild($("div", ["table-def"], [meter]));
 };
 
