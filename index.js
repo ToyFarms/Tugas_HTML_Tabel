@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("scroll", () => {
   const text = document.getElementsByClassName("heading-text")[0];
+  const blobs = document.getElementsByClassName("blob-background");
   const text_rect = text.getBoundingClientRect();
 
   const form = document.getElementById("form");
@@ -68,8 +69,14 @@ window.addEventListener("scroll", () => {
 
   if (text_rect.bottom > form_rect.top) {
     text.classList.add("heading-text-bg");
+    for (const blob of blobs) {
+      blob.classList.add("blob-blur");
+    }
   } else {
     text.classList.remove("heading-text-bg");
+    for (const blob of blobs) {
+      blob.classList.remove("blob-blur");
+    }
   }
 });
 

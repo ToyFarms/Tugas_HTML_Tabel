@@ -60,7 +60,9 @@ body {
   text-wrap: nowrap;
   z-index: -2;
   translate: -50% 100%;
-  transition: filter, opacity 1s;
+  transition:
+    filter,
+    opacity 1s;
 }
 
 .heading-text::after {
@@ -189,4 +191,126 @@ form {
   text-wrap: nowrap;
   background-color: rgb(10, 10, 10);
   height: 2rem;
+}
+
+.blob-background {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  border-radius: 50%;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  opacity: 0.2;
+  transition: opacity 500ms cubic-bezier(0, 1.03, 0.69, 0.99);
+  transition: top 1s cubic-bezier(.95,.24,.1,.98);
+}
+
+.blob-blur {
+  opacity: 0.1;
+  top: 50%;
+}
+
+.blob1 {
+  width: 20vw;
+  height: 20vw;
+  translate: 50%;
+  background: linear-gradient(45deg, #ff6f61, #f5a623, #7ed321);
+  animation: blobAnimation1 10s infinite ease-in-out;
+}
+
+.blob1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  filter: blur(1rem);
+  background: linear-gradient(45deg, #ff6f61, #f5a623, #7ed321);
+  animation: blobAnimation1 10s infinite ease-in-out;
+}
+
+.blob2 {
+  width:30vw;
+  height: 30vw;
+  translate: -20% -20%;
+  background: linear-gradient(45deg, #007aff, #00ffcc, #ff6347);
+  animation: blobAnimation2 12s infinite ease-in-out;
+}
+
+.blob2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  filter: blur(1rem);
+  background: linear-gradient(45deg, #007aff, #00ffcc, #ff6347);
+  animation: blobAnimation2 12s infinite ease-in-out;
+}
+
+.blob3 {
+  width: 20vw;
+  height: 20vw;
+  translate: 10% 20%;
+  background: linear-gradient(45deg, #d13f6b, #ffcc00, #55ff6d);
+  animation: blobAnimation3 8s infinite ease-in-out;
+}
+
+.blob3::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  filter: blur(1rem);
+  background: linear-gradient(45deg, #d13f6b, #ffcc00, #55ff6d);
+  animation: blobAnimation3 8s infinite ease-in-out;
+}
+
+@keyframes blobAnimation1 {
+  0% {
+    border-radius: 50% 40% 60% 50% / 50% 55% 45% 50%;
+  }
+  25% {
+    border-radius: 40% 60% 50% 60% / 50% 45% 55% 50%;
+  }
+  50% {
+    border-radius: 60% 50% 40% 60% / 50% 50% 55% 45%;
+  }
+  75% {
+    border-radius: 50% 60% 50% 40% / 45% 50% 50% 55%;
+  }
+  100% {
+    border-radius: 50% 40% 60% 50% / 50% 55% 45% 50%;
+  }
+}
+
+@keyframes blobAnimation2 {
+  0% {
+    border-radius: 60% 40% 50% 60% / 50% 60% 45% 55%;
+  }
+  25% {
+    border-radius: 50% 55% 60% 45% / 55% 50% 50% 60%;
+  }
+  50% {
+    border-radius: 45% 50% 55% 60% / 50% 55% 60% 45%;
+  }
+  75% {
+    border-radius: 60% 45% 50% 55% / 60% 50% 55% 50%;
+  }
+  100% {
+    border-radius: 60% 50% 60% 45% / 55% 50% 50% 55%;
+  }
+}
+
+@keyframes blobAnimation3 {
+  0% {
+    border-radius: 40% 60% 50% 40% / 50% 45% 60% 55%;
+  }
+  25% {
+    border-radius: 60% 50% 40% 50% / 45% 55% 50% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 45% 50% / 60% 50% 55% 45%;
+  }
+  75% {
+    border-radius: 45% 50% 60% 55% / 55% 60% 45% 50%;
+  }
+  100% {
+    border-radius: 40% 50% 60% 45% / 60% 55% 50% 45%;
+  }
 }
