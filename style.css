@@ -7,6 +7,14 @@
   color: white;
 }
 
+@media only screen and (max-width: 768px) {
+  *,
+  *::after,
+  *::before {
+    font-size: 0.5rem;
+  }
+}
+
 .meter-container {
   display: flex;
   flex-direction: row;
@@ -86,7 +94,7 @@ body {
 }
 
 header {
-  min-height: 40vh;
+  min-height: 15rem;
 }
 
 footer {
@@ -135,8 +143,8 @@ footer {
   border-radius: 0.4rem;
   margin-top: 0.5rem;
   color: rgb(150, 150, 150);
-  transition: color 1s cubic-bezier(0,1.03,.69,.99);
-  transition: box-shadow 1s cubic-bezier(0,1.03,.69,.99);
+  transition: color 1s cubic-bezier(0, 1.03, 0.69, 0.99);
+  transition: box-shadow 1s cubic-bezier(0, 1.03, 0.69, 0.99);
 }
 
 .people-count-btn:hover {
@@ -148,4 +156,3 @@ footer {
   color: white;
   box-shadow: 0 5px 10px 0 rgb(70, 70, 70);
 }
-
