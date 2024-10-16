@@ -78,12 +78,6 @@ body {
   transform: perspective(1rem) rotateX(30deg);
   z-index: -1;
   filter: blur(1rem);
-  transition: all 1s cubic-bezier(0.22, 0.69, 0, 0.96);
-}
-
-.heading-text:hover::after {
-  filter: blur(5rem);
-  transform: perspective(3rem) rotateX(-20deg);
 }
 
 .canvas-bg {
