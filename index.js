@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementsByClassName("heading-text")[0].classList.remove("heading-text-bg");
   const params = new URLSearchParams(window.location.search);
 
   const max_people = params.has("max_people")
@@ -60,13 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.addEventListener("scroll", () => {
-  const scroll = window.scrollY;
-  const height = document.documentElement.scrollHeight - window.innerHeight;
-  const scrollPercentage = (scroll / height) * 100;
-
   const text = document.getElementsByClassName("heading-text")[0];
+  const text_rect = text.getBoundingClientRect();
 
-  if (scrollPercentage >= 20) {
+  const form = document.getElementById("form");
+  const form_rect = form.getBoundingClientRect();
+
+  if (text_rect.bottom > form_rect.top) {
     text.classList.add("heading-text-bg");
   } else {
     text.classList.remove("heading-text-bg");
