@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
-  const max_people = parseInt(params.get("max_people")) || data.length;
+  const max_people = parseInt(params.get("max_people")) || 20;
   let i = 0;
 
   document.getElementsByClassName("people-count")[0].value = max_people;
