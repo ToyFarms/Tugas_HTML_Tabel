@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (score === "$auto") {
       score = randint(0, 100);
     }
+    console.log(score);
 
     if (address === "$auto") {
       address = cities[randint(0, cities.length - 1)];
