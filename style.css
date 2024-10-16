@@ -1,0 +1,36 @@
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+}
+
+.meter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.meter-head-container {
+  position: relative;
+  width: 100%;
+  min-height: 0.5rem;
+  background-color: red;
+}
+
+.meter-head {
+  position: absolute;
+  background-color: blue;
+  inset: 0;
+  width: 0%;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-table {
+  width: 100%;
+}
