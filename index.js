@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
-  
-  const max_people = params.has("max_people") ? parseInt(params.get("max_people")) : 20;
+
+  const max_people = params.has("max_people")
+    ? parseInt(params.get("max_people"))
+    : 20;
   let i = 0;
 
   document.getElementsByClassName("people-count")[0].value = max_people;
@@ -55,6 +57,20 @@ document.addEventListener("DOMContentLoaded", () => {
     params.set("max_people", value);
     window.location.search = params;
   });
+});
+
+window.addEventListener("scroll", () => {
+  const scroll = window.scrollY;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollPercentage = (scroll / height) * 100;
+
+  const text = document.getElementsByClassName("heading-text")[0];
+
+  if (scrollPercentage >= 20) {
+    text.classList.add("heading-text-bg");
+  } else {
+    text.classList.remove("heading-text-bg");
+  }
 });
 
 document.addEventListener("keypress", (e) => {
