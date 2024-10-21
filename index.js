@@ -9,6 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementsByClassName("people-count")[0].value = max_people;
 
+  document
+    .querySelector("body")
+    .appendChild(
+      $a("datalist", [], { id: "max-people" }, [
+        $a("option", [], { value: `${data.length}` }),
+      ]),
+    );
+
   shuffle(data);
   data.forEach((person) => {
     if (i >= max_people) return;
@@ -172,6 +180,23 @@ const $ = (tagname, classlist = [], childs = []) => {
   childs.forEach((child) => {
     e.appendChild(child);
   });
+
+  return e;
+};
+
+const $a = (tagname, classlist = [], attrs = {}, childs = []) => {
+  const e = document.createElement(tagname);
+  classlist.forEach((_class) => {
+    e.classList.add(_class);
+  });
+
+  childs.forEach((child) => {
+    e.appendChild(child);
+  });
+
+  for (const [key, value] of Object.entries(attrs)) {
+    e.setAttribute(key, value);
+  }
 
   return e;
 };
