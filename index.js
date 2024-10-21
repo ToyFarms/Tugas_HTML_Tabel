@@ -62,6 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   for (const row of document.getElementsByTagName("tr")) {
     row_observer.observe(row);
+
+    row.addEventListener("mouseenter", () => {
+      row.classList.add("hovered");
+    })
+    row.addEventListener("mouseleave", () => {
+      row.classList.remove("hovered");
+    })
   }
 
   const texts = document.getElementsByClassName("text-scramble");
