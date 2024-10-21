@@ -26,6 +26,9 @@
   background-color: blue;
   inset: 0;
   width: 0%;
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+  box-shadow: 0 0 5px 0 black;
 }
 
 .meter-indicator {
@@ -138,6 +141,7 @@ footer {
 .table-def {
   text-wrap: nowrap;
   padding: 4px;
+  box-shadow: 0 0 10px 0 black;
 }
 
 .people-count,
@@ -261,7 +265,7 @@ form {
 }
 
 @keyframes blobAnimation1 {
-  0% {
+  0%, 100% {
     border-radius: 50% 40% 60% 50% / 50% 55% 45% 50%;
   }
   25% {
@@ -273,13 +277,10 @@ form {
   75% {
     border-radius: 50% 60% 50% 40% / 45% 50% 50% 55%;
   }
-  100% {
-    border-radius: 50% 40% 60% 50% / 50% 55% 45% 50%;
-  }
 }
 
 @keyframes blobAnimation2 {
-  0% {
+  0%, 100% {
     border-radius: 60% 40% 50% 60% / 50% 60% 45% 55%;
   }
   25% {
@@ -291,13 +292,10 @@ form {
   75% {
     border-radius: 60% 45% 50% 55% / 60% 50% 55% 50%;
   }
-  100% {
-    border-radius: 60% 50% 60% 45% / 55% 50% 50% 55%;
-  }
 }
 
 @keyframes blobAnimation3 {
-  0% {
+  0%, 100% {
     border-radius: 40% 60% 50% 40% / 50% 45% 60% 55%;
   }
   25% {
@@ -308,8 +306,5 @@ form {
   }
   75% {
     border-radius: 45% 50% 60% 55% / 55% 60% 45% 50%;
-  }
-  100% {
-    border-radius: 40% 50% 60% 45% / 60% 55% 50% 45%;
   }
 }

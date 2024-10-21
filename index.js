@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementsByClassName("heading-text")[0].classList.remove("heading-text-bg");
+  setTimeout(() => check_bg_intersection(), 100);
   const params = new URLSearchParams(window.location.search);
 
   const max_people = params.has("max_people")
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-window.addEventListener("scroll", () => {
+const check_bg_intersection = () => {
   const text = document.getElementsByClassName("heading-text")[0];
   const blobs = document.getElementsByClassName("blob-background");
   const text_rect = text.getBoundingClientRect();
@@ -67,7 +67,7 @@ window.addEventListener("scroll", () => {
   const form = document.getElementById("form");
   const form_rect = form.getBoundingClientRect();
 
-  if (text_rect.bottom > form_rect.top) {
+  if (text_rect.bottom >= form_rect.top) {
     text.classList.add("heading-text-bg");
     for (const blob of blobs) {
       blob.classList.add("blob-blur");
@@ -78,6 +78,10 @@ window.addEventListener("scroll", () => {
       blob.classList.remove("blob-blur");
     }
   }
+};
+
+window.addEventListener("scroll", () => {
+  check_bg_intersection();
 });
 
 document.addEventListener("keypress", (e) => {
@@ -203,36 +207,105 @@ function shuffle(array) {
   }
 }
 
+function hsl2rgb(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let r = 0,
+    g = 0,
+    b = 0;
+
+  if (0 <= h && h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (60 <= h && h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (120 <= h && h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (180 <= h && h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (240 <= h && h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (300 <= h && h < 360) {
+    r = c;
+    g = 0;
+    b = x;
+  }
+
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+  return { r, g, b };
+}
+
+function luminance(r, g, b) {
+  const a = [r, g, b].map((v) => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+}
+
+function best_text_color(a, b, c, type = "hsl") {
+  let rgb = {};
+  if (type === "hsl") {
+    rgb = hsl2rgb(a, b, c);
+  } else {
+    rgb = { a, b, c };
+  }
+
+  const lum = luminance(rgb.r, rgb.g, rgb.b);
+  const white_contrast = (1 + 0.05) / (lum + 0.05);
+  const black_contrast = (lum + 0.05) / 0.05;
+
+  return white_contrast > black_contrast ? "white" : "black";
+}
+
 let degree = 0;
+
+const create_cell = (row, node) => {
+  const cell = row.insertCell();
+  const hsl = [degree, 50, 50];
+
+  cell.appendChild(
+    $s(
+      "div",
+      ["table-def"],
+      {
+        backgroundColor: `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`,
+        color: best_text_color(hsl[0], hsl[1], hsl[2]),
+      },
+      [node],
+    ),
+  );
+
+  degree = (degree + 5) % 360;
+};
 
 const create_row = (rowdef) => {
   const table = document.getElementsByClassName("main-table")[0];
 
   const row = table.insertRow();
-  row.style.setProperty('background-color', `hsl(${degree}, 80%, 50%)`);
-  degree = (degree + 10) % 360;
-  console.log(degree)
-  
-  let cell;
-  cell = row.insertCell();
-  cell.appendChild(
-    $("div", ["table-def"], [document.createTextNode(rowdef["name"])]),
-  );
 
-  cell = row.insertCell();
-  cell.appendChild(
-    $("div", ["table-def"], [document.createTextNode(rowdef["class"])]),
-  );
+  create_cell(row, document.createTextNode(rowdef["name"]));
+  create_cell(row, document.createTextNode(rowdef["class"]));
+  create_cell(row, document.createTextNode(rowdef["address"]));
 
-  cell = row.insertCell();
-  cell.appendChild(
-    $("div", ["table-def"], [document.createTextNode(rowdef["address"])]),
-  );
-
-  cell = row.insertCell();
   const meter = create_meter();
   meter.dataset.percent = rowdef["score"];
-  cell.appendChild($("div", ["table-def"], [meter]));
+
+  create_cell(row, meter);
 };
 
 // format: semicolon separated value; name, class, address, score; $auto for random value.
