@@ -33,6 +33,7 @@
 
 .meter-indicator {
   text-wrap: nowrap;
+  color: var(--tbl-text-clr);
 }
 
 body {
@@ -142,6 +143,7 @@ footer {
   text-wrap: nowrap;
   padding: 4px;
   box-shadow: 0 0 10px 0 black;
+  color: var(--tbl-text-clr);
 }
 
 .people-count,

@@ -284,10 +284,13 @@ const create_cell = (row, node) => {
       ["table-def"],
       {
         backgroundColor: `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`,
-        color: best_text_color(hsl[0], hsl[1], hsl[2]),
       },
       [node],
     ),
+  );
+  cell.style.setProperty(
+    "--tbl-text-clr",
+    best_text_color(hsl[0], hsl[1], hsl[2]),
   );
 
   degree = (degree + 5) % 360;
