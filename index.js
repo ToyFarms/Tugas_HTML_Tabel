@@ -203,11 +203,16 @@ function shuffle(array) {
   }
 }
 
+let degree = 0;
+
 const create_row = (rowdef) => {
   const table = document.getElementsByClassName("main-table")[0];
 
   const row = table.insertRow();
-
+  row.style.setProperty('background-color', `hsl(${degree}, 80%, 50%)`);
+  degree = (degree + 10) % 360;
+  console.log(degree)
+  
   let cell;
   cell = row.insertCell();
   cell.appendChild(
