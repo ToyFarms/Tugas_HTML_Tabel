@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     i++;
   });
 
-  const observer = new IntersectionObserver(
+  const meter_observer = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -40,7 +40,20 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   for (const meter of document.getElementsByClassName("meter-container")) {
-    observer.observe(meter);
+    meter_observer.observe(meter);
+  }
+
+  const row_observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("entering");
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+
+  for (const row of document.getElementsByTagName("tr")) {
+    row_observer.observe(row);
   }
 
   const texts = document.getElementsByClassName("text-scramble");
