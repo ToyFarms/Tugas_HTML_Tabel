@@ -168,23 +168,26 @@ footer {
 .people-count-btn {
   background-color: transparent;
   border: none;
-  box-shadow: 0 5px 10px 0 rgb(50, 50, 50);
   padding: 1rem;
   border-radius: 0.4rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   color: rgb(150, 150, 150);
-  transition: color 1s cubic-bezier(0, 1.03, 0.69, 0.99);
-  transition: box-shadow 1s cubic-bezier(0, 1.03, 0.69, 0.99);
-}
-
-.people-count-btn:hover {
-  cursor: pointer;
+  transition:
+    color 1s cubic-bezier(0, 1.03, 0.69, 0.99),
+    box-shadow 1s cubic-bezier(0, 1.03, 0.69, 0.99);
+  position: relative;
+  box-shadow: -5px -5px 10px 1px rgb(150, 10, 200);
+  mix-blend-mode: color-dodge;
 }
 
 .people-count:hover,
 .people-count-btn:hover {
   color: white;
-  box-shadow: 0 5px 10px 0 rgb(70, 70, 70);
+  box-shadow: 0px 0px 10px 1px rgb(150, 10, 200);
+}
+
+.people-count-btn:hover {
+  cursor: pointer;
 }
 
 form {
