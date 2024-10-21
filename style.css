@@ -176,7 +176,7 @@ footer {
   padding: 1rem;
   border-radius: 0.4rem;
   margin-top: 1rem;
-  color: rgb(150, 150, 150);
+  color: rgb(230, 230, 230);
   transition:
     color 1s cubic-bezier(0, 1.03, 0.69, 0.99),
     box-shadow 1s cubic-bezier(0, 1.03, 0.69, 0.99);
