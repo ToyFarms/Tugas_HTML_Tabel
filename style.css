@@ -181,7 +181,7 @@ footer {
     color 1s cubic-bezier(0, 1.03, 0.69, 0.99),
     box-shadow 1s cubic-bezier(0, 1.03, 0.69, 0.99);
   position: relative;
-  box-shadow: -5px -5px 10px 1px rgb(150, 10, 200);
+  box-shadow: 0px 2px 5px 1px rgb(150, 10, 200);
   mix-blend-mode: color-dodge;
 }
 
