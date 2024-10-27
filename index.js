@@ -1,3 +1,11 @@
+const g_rows = [];
+const g_filter = {
+  name: "all",
+  class: "all",
+  address: "all",
+  score: [0, 100],
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => check_bg_intersection(), 100);
   const params = new URLSearchParams(window.location.search);
@@ -7,15 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
     : 20;
   let i = 0;
 
-  document.getElementsByClassName("people-count")[0].value = max_people;
+  const people_count = document.querySelector(".people-count");
+  people_count.value = max_people;
+  people_count.setAttribute("placeholder", data.length);
 
-  document
-    .querySelector("body")
-    .appendChild(
-      $a("datalist", [], { id: "max-people" }, [
-        $a("option", [], { value: `${data.length}` }),
-      ]),
-    );
+  people_count.appendChild(
+    $a("datalist", [], { id: "max-people" }, [
+      $a("option", [], { value: `${data.length}` }),
+    ]),
+  );
 
   shuffle(data);
   data.forEach((person) => {
@@ -35,19 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
     i++;
   });
 
-  const meter_observer = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animate_meter(entry.target, entry.target.dataset.percent);
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { rootMargin: "100%" },
-  );
+  const meter_observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        meter_queue.push({
+          meter: target,
+          head: target.querySelector(".meter-head"),
+          indicator: target.querySelector(".meter-indicator"),
+          target: parseFloat(target.dataset.percent) || 69,
+        });
+        observer.unobserve(target);
+      }
+    });
+  });
 
-  for (const meter of document.getElementsByClassName("meter-container")) {
+  for (const meter of document.querySelectorAll(".meter-container")) {
     meter_observer.observe(meter);
   }
 
@@ -65,13 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     row.addEventListener("mouseenter", () => {
       row.classList.add("hovered");
-    })
+    });
     row.addEventListener("mouseleave", () => {
       row.classList.remove("hovered");
-    })
+    });
   }
 
-  const texts = document.getElementsByClassName("text-scramble");
+  const texts = document.querySelectorAll(".text-scramble");
   for (const text of texts) {
     animate_text_scramble(text);
   }
@@ -79,17 +90,192 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const value = document.getElementsByClassName("people-count")[0].value;
+    const value = people_count.value;
 
     const params = new URLSearchParams(window.location.search);
     params.set("max_people", value);
     window.location.search = params;
   });
+
+  const classes = ["all", "X TKJ", "X TKRO"];
+  for (let i = 0; i < 7; i++) {
+    classes.push(`X TKJ ${i + 1}`);
+  }
+  for (let i = 0; i < 5; i++) {
+    classes.push(`X TKRO ${i + 1}`);
+  }
+
+  const class_in = document.querySelector("#class-input");
+  class_in.append(
+    ...classes.map((_class) =>
+      $a("option", [], { value: _class }, [document.createTextNode(_class)]),
+    ),
+  );
+
+  document.querySelector("#name-input").addEventListener("input", (e) => {
+    g_filter["name"] = e.target.value;
+    apply_filter(g_filter);
+    save_filter();
+  });
+
+  document.querySelector("#class-input").addEventListener("change", (e) => {
+    g_filter["class"] = e.target.value;
+    apply_filter(g_filter);
+    save_filter();
+  });
+
+  document.querySelector("#address-input").addEventListener("input", (e) => {
+    g_filter["address"] = e.target.value;
+    apply_filter(g_filter);
+    save_filter();
+  });
+
+  document.querySelector("#score-min-input").addEventListener("input", (e) => {
+    g_filter["score"][0] = e.target.value;
+    apply_filter(g_filter);
+    save_filter();
+  });
+
+  document.querySelector("#score-max-input").addEventListener("input", (e) => {
+    g_filter["score"][1] = e.target.value;
+    apply_filter(g_filter);
+    save_filter();
+  });
+
+  load_filter();
+  apply_filter(g_filter);
 });
 
+const load_filter = () => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("f_name")) {
+    g_filter["name"] = params.get("f_name");
+  }
+  if (params.get("f_class")) {
+    g_filter["class"] = params.get("f_class");
+  }
+  if (params.get("f_address")) {
+    g_filter["address"] = params.get("f_address");
+  }
+  if (params.get("f_score")) {
+    const [lower, upper] = params.get("f_score").split("_");
+    g_filter["score"][0] = parseFloat(lower) || 0;
+    g_filter["score"][1] = parseFloat(upper) || 100;
+  }
+
+  document.querySelector("#name-input").value = g_filter["name"];
+  document.querySelector("#class-input").value = g_filter["class"];
+  document.querySelector("#address-input").value = g_filter["address"];
+  document.querySelector("#score-min-input").value = g_filter["score"][0];
+  document.querySelector("#score-max-input").value = g_filter["score"][1];
+};
+
+const save_filter = () => {
+  const params = new URLSearchParams(window.location.search);
+  params.set("f_name", g_filter["name"]);
+  params.set("f_class", g_filter["class"]);
+  params.set("f_address", g_filter["address"]);
+  params.set("f_score", `${g_filter["score"][0]}_${g_filter["score"][1]}`);
+
+  window.history.pushState(g_filter, "", "?" + params.toString());
+};
+
+const apply_filter = (filter) => {
+  const tbody = document.querySelector(".main-table tbody");
+  let rows = g_rows;
+
+  if (filter["name"] && filter["name"] !== "all") {
+    rows = fuzzy_filter(
+      g_rows,
+      filter["name"],
+      (row) => row.children[0].querySelector(".table-def").innerText,
+    );
+  }
+
+  if (filter["class"] && filter["class"] !== "all") {
+    rows = rows.filter((row) => {
+      const cell_class = row.children[1].querySelector(".table-def").innerText.toLowerCase();
+      const _class = filter["class"].toLowerCase()
+      if (/\d/.test(_class)) {
+        return cell_class === _class;
+      } else {
+        return cell_class.startsWith(_class);
+      }
+    });
+  }
+
+  if (filter["address"] && filter["address"] !== "all") {
+    rows = fuzzy_filter(
+      rows,
+      filter["address"],
+      (row) => row.children[2].querySelector(".table-def").innerText,
+    );
+  }
+
+  if (filter["score"]) {
+    rows = rows.filter((row) => {
+      const percent =
+        parseFloat(
+          row.children[3].querySelector(".meter-container").dataset.percent,
+        ) || 0;
+      let lower = filter["score"][0] || 0;
+      let upper = filter["score"][1] || 100;
+
+      return percent >= lower && percent <= upper;
+    });
+  }
+
+  tbody.replaceChildren(...rows);
+};
+
+const fuzzy_filter = (array, _query, key) => {
+  const query = _query.toLowerCase();
+  if (query === "" || !query) {
+    return array;
+  }
+
+  const calculate_score = (obj) => {
+    const str = key(obj).toLowerCase();
+    let score = 0;
+    let query_index = 0;
+    let consecutive_bonus = 0;
+    let start_bonus = 0;
+
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+
+      if (char === query[query_index]) {
+        score += 10;
+        if (i === query_index) score += 3;
+        if (query_index === 0) start_bonus = 5;
+
+        consecutive_bonus += 5;
+        score += consecutive_bonus;
+
+        query_index++;
+      } else {
+        consecutive_bonus = 0;
+      }
+
+      if (query_index === query.length) break;
+    }
+
+    score += start_bonus;
+
+    return { obj, score };
+  };
+
+  return array
+    .map((obj) => calculate_score(obj))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.obj);
+};
+
 const check_bg_intersection = () => {
-  const text = document.getElementsByClassName("heading-text")[0];
-  const blobs = document.getElementsByClassName("blob-background");
+  const text = document.querySelector(".heading-text");
+  const blobs = document.querySelectorAll(".blob-background");
   const text_rect = text.getBoundingClientRect();
 
   const form = document.getElementById("form");
@@ -115,7 +301,7 @@ window.addEventListener("scroll", () => {
 document.addEventListener("keypress", (e) => {
   if (e.key === "/") {
     e.preventDefault();
-    document.getElementsByClassName("people-count")[0].focus();
+    document.querySelector(".people-count").focus();
   }
 });
 
@@ -141,41 +327,84 @@ const animate_text_scramble = (text) => {
   }, 40);
 };
 
-const animate_meter = (meter, target_percent) => {
-  const initial_width = parseFloat(meter.style.width) || 0;
-  const meter_head = meter.querySelector(".meter-head");
-  const meter_indicator = meter.querySelector(".meter-indicator");
+const cubic_bezier = (t, x1, y1, x2, y2, epsilon = 0.0001) => {
+  function bezier_coord(a, b, t) {
+    return 3 * (1 - t) ** 2 * t * a + 3 * (1 - t) * t ** 2 * b + t ** 3;
+  }
 
-  meter_head.animate(
-    [{ width: initial_width + "%" }, { width: target_percent + "%" }],
-    {
-      duration: 2000,
-      easing: "cubic-bezier(.95,.24,.1,.98)",
-      fill: "forwards",
-    },
-  );
-
-  const update_indicator = () => {
-    const parent_width = parseFloat(
-      getComputedStyle(meter_head.parentElement).width,
+  function bezier_coord_derv(a, b, t) {
+    return (
+      3 * (1 - t) ** 2 * a + 6 * (1 - t) * t * (b - a) + 3 * t ** 2 * (1 - b)
     );
-    const width = parseFloat(getComputedStyle(meter_head).width);
-    const norm = width / parent_width;
-    const percent = Math.ceil(norm * 100);
-    meter_indicator.textContent = `${percent.toString().padStart(3, ".")}% `;
-    meter_head.style.setProperty(
+  }
+
+  // [Newton–Raphson method](https://en.wikipedia.org/wiki/Newton%27s_method)
+  let u = t;
+  let i;
+  for (i = 0; i < 10; i++) {
+    let x_est = bezier_coord(x1, x2, u);
+    let dx = x_est - t;
+    if (Math.abs(dx) < epsilon) break;
+    let d_est = bezier_coord_derv(x1, x2, u);
+    if (Math.abs(d_est) < epsilon) break;
+    u -= dx / d_est;
+  }
+
+  return bezier_coord(y1, y2, u);
+};
+
+const meter_queue = [];
+let meter_processed = 0;
+
+const update_meter = () => {
+  for (let i = 0; i < meter_queue.length; i++) {
+    const meter = meter_queue[i];
+
+    const duration = 2000;
+    const [p0, p1, p2, p3] = [0.95, 0.24, 0.1, 0.98];
+
+    if (!meter.initialized) {
+      meter.start = Date.now();
+      meter.percent = 0;
+      meter.initialized = true;
+    }
+
+    const elapsed = Date.now() - meter.start;
+    const t = Math.min(elapsed / duration, 1);
+
+    if (t === 1) {
+      meter_queue.splice(i, 1);
+      i--;
+      meter_processed++;
+      continue;
+    }
+
+    const ease = cubic_bezier(t, p0, p1, p2, p3);
+    meter.percent = ease * meter.target;
+
+    meter.head.style.width = meter.percent + "%";
+
+    meter.indicator.textContent = `${Math.ceil(meter.percent).toString().padStart(3, ".")}% `;
+    const norm = meter.percent / 100;
+    meter.head.style.setProperty(
       "background-color",
       `rgb(${255 - norm * 255}, ${norm * 255}, 0)`,
     );
+  }
 
-    if (Math.abs(percent - target_percent) < 0.001) return;
+  if (meter_processed !== g_rows.length || g_rows.length === 0) {
+    requestAnimationFrame(update_meter);
+  }
+};
 
-    requestAnimationFrame(update_indicator);
-  };
+requestAnimationFrame(update_meter);
 
-  requestAnimationFrame(update_indicator);
-
-  meter_head.style.width = target_percent + "%";
+const append_child = (root, node) => {
+  if (typeof node !== "object") {
+    root.appendChild(document.createTextNode(node));
+  } else {
+    root.appendChild(node);
+  }
 };
 
 const $ = (tagname, classlist = [], childs = []) => {
@@ -185,7 +414,7 @@ const $ = (tagname, classlist = [], childs = []) => {
   });
 
   childs.forEach((child) => {
-    e.appendChild(child);
+    append_child(e, child);
   });
 
   return e;
@@ -198,7 +427,7 @@ const $a = (tagname, classlist = [], attrs = {}, childs = []) => {
   });
 
   childs.forEach((child) => {
-    e.appendChild(child);
+    append_child(e, child);
   });
 
   for (const [key, value] of Object.entries(attrs)) {
@@ -215,7 +444,7 @@ const $s = (tagname, classlist = [], attrs = {}, childs = []) => {
   });
 
   childs.forEach((child) => {
-    e.appendChild(child);
+    append_child(e, child);
   });
 
   for (const [key, value] of Object.entries(attrs)) {
@@ -342,9 +571,10 @@ const create_cell = (row, node) => {
 };
 
 const create_row = (rowdef) => {
-  const table = document.getElementsByClassName("main-table")[0];
+  const table = document.querySelector(".main-table tbody");
 
   const row = table.insertRow();
+  g_rows.push(row);
 
   create_cell(row, document.createTextNode(rowdef["name"]));
   create_cell(row, document.createTextNode(rowdef["class"]));

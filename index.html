@@ -19,20 +19,56 @@
       ></p>
     </header>
     <div>
-      <p style="color: gray; text-align: center">Max people</p>
+      <p style="color: gray; text-align: center">max siswa</p>
       <form id="form">
-        <input class="people-count" list="max-people" />
+        <input type="search" class="people-count" list="max-people" />
         <button class="people-count-btn">Refresh</button>
       </form>
     </div>
+    <div class="table-filter-container">
+      <p class="filter-label">Filter</p>
+      <div class="filter-type-container">
+        <p class="label-text">nama</p>
+        <input id="name-input" class="filter-text-input" placeholder="all" />
+
+        <p class="label-text">kelas</p>
+        <select
+          id="class-input"
+          class="filter-select-input"
+          aria-placeholder="all"
+        ></select>
+
+        <p class="label-text">alamat</p>
+        <input id="address-input" class="filter-text-input" placeholder="all" />
+
+        <p class="label-text">nilai [min]</p>
+        <input
+          id="score-min-input"
+          class="filter-text-input"
+          type="number"
+          placeholder="0"
+        />
+
+        <p class="label-text">nilai [max]</p>
+        <input
+          id="score-max-input"
+          class="filter-text-input"
+          type="number"
+          placeholder="100"
+        />
+      </div>
+    </div>
     <div class="table-container">
       <table class="main-table">
-        <tr>
-          <th style="width: 20%">Nama</th>
-          <th style="width: 10%">Kelas</th>
-          <th style="width: 10%">Alamat</th>
-          <th style="min-width: 50vw">Nilai</th>
-        </tr>
+        <thead>
+          <tr>
+            <th style="width: 20%">Nama</th>
+            <th style="width: 10%">Kelas</th>
+            <th style="width: 10%">Alamat</th>
+            <th style="min-width: 50vw">Nilai</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
       </table>
     </div>
     <footer>
@@ -46,7 +82,7 @@
       </div>
       <div class="link">
         <a href="#">Home</a>
-        <a href="javascript:void(0);">About</a>
+        <a href="/Tugas_HTML_Tabel/about">About</a>
         <a href="javascript:void(0);">Contact</a>
         <a href="javascript:void(0);">License</a>
       </div>

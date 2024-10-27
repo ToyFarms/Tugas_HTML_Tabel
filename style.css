@@ -23,7 +23,7 @@
 
 .meter-head {
   position: absolute;
-  background-color: blue;
+  background-color: green;
   inset: 0;
   width: 0%;
   border-top-right-radius: 0.3rem;
@@ -53,6 +53,7 @@ body {
 
 .table-container {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   width: 100%;
   overflow-x: auto;
@@ -193,6 +194,12 @@ footer {
 
 .people-count-btn:hover {
   cursor: pointer;
+}
+
+.people-count:focus,
+.people-count-btn:focus {
+  outline: none;
+  box-shadow: 0px 0px 10px 10px rgb(150, 10, 200);
 }
 
 form {
@@ -338,4 +345,68 @@ form {
   75% {
     border-radius: 45% 50% 60% 55% / 55% 60% 45% 50%;
   }
+}
+
+.filter-select-input {
+  padding: 0.675em 6em 0.675em 1em;
+  background-color: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  background-color: rgba(100, 100, 100, 20%);
+  margin-right: 1rem;
+}
+
+.label-text {
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.table-filter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 95%;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 0.3rem;
+  background-color: rgba(100, 100, 100, 20%);
+  text-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.filter-label {
+  user-select: none;
+  background-color: white;
+  color: black;
+  margin-right: 2rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  font-weight: 1000;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease,
+    border-radius 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.filter-label:hover {
+  background-color: black;
+  color: white;
+  margin-right: 2rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  font-weight: 1000;
+  border-radius: 0.2rem;
+}
+
+.filter-type-container {
+  display: flex;
+  margin-left: 2rem;
+  flex: 1;
+}
+
+.filter-text-input {
+  outline: none;
+  border: none;
+  background-color: rgb(200, 200, 200, 20%);
+  border-radius: 0.7rem;
+  padding-inline: 0.5rem;
+  margin-right: 1rem;
 }
