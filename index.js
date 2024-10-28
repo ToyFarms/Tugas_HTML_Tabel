@@ -546,11 +546,11 @@ function best_text_color(a, b, c, type = "hsl") {
   return white_contrast > black_contrast ? "white" : "black";
 }
 
-let degree = 0;
+let angle = 0;
 
 const create_cell = (row, node) => {
   const cell = row.insertCell();
-  const hsl = [degree, 50, 50];
+  const hsl = [angle, 50, 50];
 
   cell.appendChild(
     $s(
@@ -567,7 +567,7 @@ const create_cell = (row, node) => {
     best_text_color(hsl[0], hsl[1], hsl[2]),
   );
 
-  degree = (degree + 5) % 360;
+  angle = (angle + 5) % 360;
 };
 
 const create_row = (rowdef) => {
